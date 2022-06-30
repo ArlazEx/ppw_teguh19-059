@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Topic Modeling dengan LSA &#8212; PPW_LDA</title>
+    <title>Nomer 2 : Topic Modeling dengan LSA &#8212; PPW_Teguh_19-059</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -54,7 +54,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Program Crawling" href="Program_Crawling.html" />
+    <link rel="prev" title="Nomer 1 : Pre Processing Data, Tfidf dan K-Means" href="kmeans.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -98,7 +98,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">PPW_LDA</h1>
+      <h1 class="site-logo" id="site-title">PPW_Teguh_19-059</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -120,9 +120,14 @@ const thebe_selector_output = ".output, .cell_output"
    Program Crawling
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="kmeans.html">
+   Nomer 1 : Pre Processing Data, Tfidf dan K-Means
+  </a>
+ </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Topic Modeling dengan LSA
+   Nomer 2 : Topic Modeling dengan LSA
   </a>
  </li>
 </ul>
@@ -184,7 +189,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/UAS_PPW.ipynb"
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/LSA.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -244,7 +249,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FUAS_PPW.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FLSA.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -272,7 +277,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/UAS_PPW.ipynb"
+        <a href="_sources/LSA.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -321,7 +326,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Topic Modeling dengan LSA</h1>
+                <h1>Nomer 2 : Topic Modeling dengan LSA</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -333,8 +338,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="topic-modeling-dengan-lsa">
-<h1>Topic Modeling dengan LSA<a class="headerlink" href="#topic-modeling-dengan-lsa" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="nomer-2-topic-modeling-dengan-lsa">
+<h1>Nomer 2 : Topic Modeling dengan LSA<a class="headerlink" href="#nomer-2-topic-modeling-dengan-lsa" title="Permalink to this headline">#</a></h1>
 <h2>Import Library</h2>
 <p>Langkah pertama adalah melakukan import library yang dimana nantinya digunakan untuk membaca data mauapaun memanipulasi dan, untuk tahapan preprocessing, Tf-idf, maupun untuk LSA nya nanti.</p><div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -369,6 +374,11 @@ title="Print to PDF"
 <span class="c1"># vectorizers for creating the document-term-matrix (DTM)</span>
 <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span><span class="p">,</span><span class="n">CountVectorizer</span>
 
+<span class="c1"># SVD</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">TruncatedSVD</span>
+
+<span class="c1">#k means</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
 
 <span class="c1">#stop-words</span>
 <span class="n">stop_words</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;indonesian&#39;</span><span class="p">))</span>
@@ -376,9 +386,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[nltk_data] Downloading package punkt to
-[nltk_data]     C:\Users\Arlaz\AppData\Roaming\nltk_data...
-[nltk_data]   Package punkt is already up-to-date!
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[nltk_data] Error loading punkt: &lt;urlopen error [Errno 11001]
+[nltk_data]     getaddrinfo failed&gt;
 </pre></div>
 </div>
 </div>
@@ -386,83 +395,7 @@ title="Print to PDF"
 <h2>Membaca Dokumen</h2>
 <p>Setelahnya, proses yang dilakukan adalah membuka dokumen hasil Crawling yang telah dilakukan sebelumnya</p><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;hasil_abstrak.csv&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">Input In [2],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;hasil_abstrak.csv&#39;</span><span class="p">)</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\util\_decorators.py:311,</span> in <span class="ni">deprecate_nonkeyword_arguments.&lt;locals&gt;.decorate.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">305</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_allow_args</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">306</span>     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">307</span>         <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">308</span>         <span class="ne">FutureWarning</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">309</span>         <span class="n">stacklevel</span><span class="o">=</span><span class="n">stacklevel</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">310</span>     <span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">311</span> <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\io\parsers\readers.py:680,</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, error_bad_lines, warn_bad_lines, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">665</span> <span class="n">kwds_defaults</span> <span class="o">=</span> <span class="n">_refine_defaults_read</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">666</span>     <span class="n">dialect</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">667</span>     <span class="n">delimiter</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">676</span>     <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;delimiter&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="p">},</span>
-<span class="g g-Whitespace">    </span><span class="mi">677</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">678</span> <span class="n">kwds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds_defaults</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">680</span> <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\io\parsers\readers.py:575,</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">572</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">574</span> <span class="c1"># Create the parser.</span>
-<span class="ne">--&gt; </span><span class="mi">575</span> <span class="n">parser</span> <span class="o">=</span> <span class="n">TextFileReader</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">577</span> <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">or</span> <span class="n">iterator</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">578</span>     <span class="k">return</span> <span class="n">parser</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\io\parsers\readers.py:933,</span> in <span class="ni">TextFileReader.__init__</span><span class="nt">(self, f, engine, **kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">930</span>     <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span>
-<span class="g g-Whitespace">    </span><span class="mi">932</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="p">:</span> <span class="n">IOHandles</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="ne">--&gt; </span><span class="mi">933</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_engine</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\io\parsers\readers.py:1217,</span> in <span class="ni">TextFileReader._make_engine</span><span class="nt">(self, f, engine)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1213</span>     <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;rb&quot;</span>
-<span class="g g-Whitespace">   </span><span class="mi">1214</span> <span class="c1"># error: No overload variant of &quot;get_handle&quot; matches argument types</span>
-<span class="g g-Whitespace">   </span><span class="mi">1215</span> <span class="c1"># &quot;Union[str, PathLike[str], ReadCsvBuffer[bytes], ReadCsvBuffer[str]]&quot;</span>
-<span class="g g-Whitespace">   </span><span class="mi">1216</span> <span class="c1"># , &quot;str&quot;, &quot;bool&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1217</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="o">=</span> <span class="n">get_handle</span><span class="p">(</span>  <span class="c1"># type: ignore[call-overload]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1218</span>     <span class="n">f</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1219</span>     <span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1220</span>     <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1221</span>     <span class="n">compression</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1222</span>     <span class="n">memory_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;memory_map&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1223</span>     <span class="n">is_text</span><span class="o">=</span><span class="n">is_text</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1224</span>     <span class="n">errors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding_errors&quot;</span><span class="p">,</span> <span class="s2">&quot;strict&quot;</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1225</span>     <span class="n">storage_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;storage_options&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1226</span> <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1227</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="g g-Whitespace">   </span><span class="mi">1228</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="o">.</span><span class="n">handle</span>
-
-<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\io\common.py:789,</span> in <span class="ni">get_handle</span><span class="nt">(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">784</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">785</span>     <span class="c1"># Check whether the filename is to be opened in binary mode.</span>
-<span class="g g-Whitespace">    </span><span class="mi">786</span>     <span class="c1"># Binary mode does not support &#39;encoding&#39; and &#39;newline&#39;.</span>
-<span class="g g-Whitespace">    </span><span class="mi">787</span>     <span class="k">if</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">and</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">788</span>         <span class="c1"># Encoding</span>
-<span class="ne">--&gt; </span><span class="mi">789</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">790</span>             <span class="n">handle</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">791</span>             <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">792</span>             <span class="n">encoding</span><span class="o">=</span><span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">793</span>             <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">794</span>             <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">795</span>         <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">796</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">797</span>         <span class="c1"># Binary mode</span>
-<span class="g g-Whitespace">    </span><span class="mi">798</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;hasil_abstrak.csv&#39;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;hasil_crawling.csv&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -499,84 +432,195 @@ title="Print to PDF"
   <tbody>
     <tr>
       <th>0</th>
-      <td>PEMETAAN RISIKO TSUNAMI BERDASARKAN SKENARIO K...</td>
-      <td>ABSTRAK\n\nTsunami merupakan bencana yang dapa...</td>
+      <td>Pengaruh Retailing Mix terhadap Keputusan Pemb...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Sistem Rekomendasi Dalam Menentukan Posisi Dep...</td>
-      <td>Sepak bola adalah salah satu olahraga yang saa...</td>
+      <td>PENGARUH PERSEPSI MANFAAT, PERSEPSI KEMUDAHAN,...</td>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Pengembangan LKS Berbasis Keterampilan Generik...</td>
-      <td>Penelitian ini bertujuan untuk mengetahui kela...</td>
+      <td>PELAPORAN BIAYA KUALITAS UNTUK MEMINIMALKAN TE...</td>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>ANALISIS MISKONSEPSI SISWA PADA MATERI KLASIFI...</td>
-      <td>Penelitian ini bertujuan untuk mengetahui pers...</td>
+      <td>PENGARUH KOMPETENSI DOSEN TERHADAP KINERJA DOS...</td>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Keberadaan Mikroplastik Pada Ikan Swanggi (Pri...</td>
-      <td>Mikroplastik merupakan sampah plastik yang men...</td>
+      <td>PENGARUH PENGEMBANGAN KARIR TERHADAP SEMANGAT ...</td>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>AN ANALYSIS OF PERSONAL PRONOUNS IN DONALD TRU...</td>
-      <td>ABSTRACT\n\nNafilatun Nasuha. 160511100005. An...</td>
+      <td>Analisis Inovasi Dan Keunggulan Bersaing \r\nD...</td>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>PERENCANAAN KEBIJAKAN PENGENDALIAN PERSEDIAA...</td>
-      <td>PT. Apie Indo Karunia merupakan suatu perusaha...</td>
+      <td>PENGARUH TIPE KEPEMIMPINAN TERHADAP PRESTASI K...</td>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Kajian Pola Arus Permukaan dan Sebaran Konsent...</td>
-      <td>Pesisir Pantai Kenjeran merupakan kawasan yang...</td>
+      <td>PENGARUH PERILAKU KONSUMEN TERHADAP KEPUTUSAN ...</td>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>TINJAUAN HUKUM ISLAM  TERHADAP BISNIS JASA TRA...</td>
-      <td>Perbedaan harga yang diterapkan pemilik jasa t...</td>
+      <td>PENGARUH DIMENSI KUALITAS PELAYANAN TERHADAP K...</td>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>Komunikasi Antar Blater dalam Tradisi Remoh se...</td>
-      <td>ABSTRAK\n\nRemoh blater diadakan untuk berkump...</td>
+      <td>ANALISIS TINGKAT RISIKO KREDIT \r\nPADA PD. BP...</td>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>PENGARUH SERTIFIKASI HALAL, BRAND DAN KUALITAS...</td>
-      <td>Penduduk Indonesia mayoritas beragama Islam de...</td>
+      <td>ANALISIS PERSEPSI BRAND ASSOCIATION MENURUT PE...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>MULTI CRITERIA DECISION MAKING UNTUK MENENTUKA...</td>
-      <td>Perguruan Tinggi merupakan salah satu jenjang ...</td>
+      <td>PENGARUH FAKTOR-FAKTOR PELATIHAN DAN PENGEMBAN...</td>
+      <td>ABSTRAK\r\...</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>ANALISIS FINANCIAL DISTRESS MENGGUNAKAN MODEL ...</td>
-      <td>?Financial Distress merupakan ketidakmampuan s...</td>
+      <td>PENGARUH KEPEMIMPINAN DAN KOMPENSASI TERHADAP ...</td>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>Pengaruh IMC (Integrated Marketing Communicati...</td>
-      <td>ABSTRAK\n\n“Pengaruh IMC (Integrated Marketing...</td>
+      <td>Pengukuran Website Quality Pada Situs Sistem A...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>KAJIAN STOK RAJUNGAN (Portunus Pelagicus) DI P...</td>
-      <td>Rajungan (Portunus pelagicus) merupakan komodi...</td>
+      <td>PENGARUH GAYA KEPEMIMPINAN DEMOKRATIK TERHADAP...</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>Disini kita membuang kolom yang tidak dibutuhkan</p><div class="cell docutils container">
+<p>Dikarenakan pada data ke 15 atau index 14 data Abstraknya NaN atau kosong, maka disini data pada baris tersebut akan dihilangkan</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="mi">14</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Judul</th>
+      <th>Abstrak</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Pengaruh Retailing Mix terhadap Keputusan Pemb...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>PENGARUH PERSEPSI MANFAAT, PERSEPSI KEMUDAHAN,...</td>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>PELAPORAN BIAYA KUALITAS UNTUK MEMINIMALKAN TE...</td>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>PENGARUH KOMPETENSI DOSEN TERHADAP KINERJA DOS...</td>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>PENGARUH PENGEMBANGAN KARIR TERHADAP SEMANGAT ...</td>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Analisis Inovasi Dan Keunggulan Bersaing \r\nD...</td>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>PENGARUH TIPE KEPEMIMPINAN TERHADAP PRESTASI K...</td>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>PENGARUH PERILAKU KONSUMEN TERHADAP KEPUTUSAN ...</td>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>PENGARUH DIMENSI KUALITAS PELAYANAN TERHADAP K...</td>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ANALISIS TINGKAT RISIKO KREDIT \r\nPADA PD. BP...</td>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>ANALISIS PERSEPSI BRAND ASSOCIATION MENURUT PE...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>PENGARUH FAKTOR-FAKTOR PELATIHAN DAN PENGEMBAN...</td>
+      <td>ABSTRAK\r\...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>PENGARUH KEPEMIMPINAN DAN KOMPENSASI TERHADAP ...</td>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Pengukuran Website Quality Pada Situs Sistem A...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Disini kita membuang kolom yang tidak dibutuhkan yaitu disini adalah kolom judul</p><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Judul&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -614,76 +658,72 @@ title="Print to PDF"
   <tbody>
     <tr>
       <th>0</th>
-      <td>ABSTRAK\n\nTsunami merupakan bencana yang dapa...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Sepak bola adalah salah satu olahraga yang saa...</td>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Penelitian ini bertujuan untuk mengetahui kela...</td>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Penelitian ini bertujuan untuk mengetahui pers...</td>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Mikroplastik merupakan sampah plastik yang men...</td>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>ABSTRACT\n\nNafilatun Nasuha. 160511100005. An...</td>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>PT. Apie Indo Karunia merupakan suatu perusaha...</td>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Pesisir Pantai Kenjeran merupakan kawasan yang...</td>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Perbedaan harga yang diterapkan pemilik jasa t...</td>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>ABSTRAK\n\nRemoh blater diadakan untuk berkump...</td>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>Penduduk Indonesia mayoritas beragama Islam de...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>Perguruan Tinggi merupakan salah satu jenjang ...</td>
+      <td>ABSTRAK\r\...</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>?Financial Distress merupakan ketidakmampuan s...</td>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>ABSTRAK\n\n“Pengaruh IMC (Integrated Marketing...</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>Rajungan (Portunus pelagicus) merupakan komodi...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<h2>Proses Cleaning Data dan Preprocesing Data</h2>
+<h2>Preprocesing Data</h2>
 <p>Pada Proses ini tahap Preprocessing dilakukan dengan lemmatizer dan juga stopword.
-    Proses ini dilakukan agar hasil pemrosesan nantinya (tfidf) menjadi semakin akurat tanpa qdanya tanda baca maupun simbol simbol yang membuat hasilnya kurang akurat.
+    Proses ini dilakukan untuk menghilangkan tanda baca maupun simbol simbol yang tidak diperlukan.
 </p><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">headline</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="n">le</span><span class="o">=</span><span class="n">WordNetLemmatizer</span><span class="p">()</span>
-    <span class="n">word_tokens</span><span class="o">=</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">headline</span><span class="p">)</span>
+    <span class="n">word_tokens</span><span class="o">=</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="n">le</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word_tokens</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">cleaned_text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cleaned_text</span>
@@ -731,78 +771,73 @@ title="Print to PDF"
   <tbody>
     <tr>
       <th>0</th>
-      <td>ABSTRAK\n\nTsunami merupakan bencana yang dapa...</td>
-      <td>ABSTRAK Tsunami bencana ancaman masyarakat wil...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+      <td>Tujuan penelitian pengaruh variabel Retailing ...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Sepak bola adalah salah satu olahraga yang saa...</td>
-      <td>Sepak bola salah olahraga digemari remaja bela...</td>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
+      <td>Tujuan penelitian mengidentifikasi variabel-va...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Penelitian ini bertujuan untuk mengetahui kela...</td>
-      <td>Penelitian bertujuan kelayakan keterbacaan res...</td>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
+      <td>ABSTRAK Penelitian rumusan pelaporan biaya kua...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Penelitian ini bertujuan untuk mengetahui pers...</td>
-      <td>Penelitian bertujuan persentase miskonsepsi si...</td>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
+      <td>Abstrak Aththaariq Pengaruh Kompetensi Dosen T...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Mikroplastik merupakan sampah plastik yang men...</td>
-      <td>Mikroplastik sampah plastik mengalami degradas...</td>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
+      <td>Badan Usaha Milik Negara bergerak bidang penye...</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>ABSTRACT\n\nNafilatun Nasuha. 160511100005. An...</td>
-      <td>ABSTRACT Nafilatun Nasuha 160511100005 Analysi...</td>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
+      <td>ABSTRAK Tujuan penelitian mendeskripsikan inov...</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>PT. Apie Indo Karunia merupakan suatu perusaha...</td>
-      <td>Apie Indo Karunia perusahaan bidang industri m...</td>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
+      <td>ABSTRAK Dharma Abidin Syah Kesimpulan Terdapat...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Pesisir Pantai Kenjeran merupakan kawasan yang...</td>
-      <td>Pesisir Pantai Kenjeran kawasan potensi wisata...</td>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
+      <td>ABSTRAK Haryono Arifin Pengaruh Perilaku Konsu...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Perbedaan harga yang diterapkan pemilik jasa t...</td>
-      <td>Perbedaan harga diterapkan pemilik jasa transp...</td>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
+      <td>ABSTRAK Tujuan penelitian mengidentifikasi var...</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>ABSTRAK\n\nRemoh blater diadakan untuk berkump...</td>
-      <td>ABSTRAK Remoh blater diadakan berkumpulnya bla...</td>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
+      <td>Hasil penelitian perhitungan Credit Risk Ratio...</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>Penduduk Indonesia mayoritas beragama Islam de...</td>
-      <td>Penduduk Indonesia mayoritas beragama Islam me...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+      <td>Tujuan penelitian persepsi brand association p...</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>Perguruan Tinggi merupakan salah satu jenjang ...</td>
-      <td>Perguruan Tinggi salah jenjang pendidikan Seko...</td>
+      <td>ABSTRAK\r\...</td>
+      <td>ABSTRAK Satiyah Pengaruh Faktor-faktor Pelatih...</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>?Financial Distress merupakan ketidakmampuan s...</td>
-      <td>Financial Distress ketidakmampuan perusahaan m...</td>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
+      <td>Abstrak Penelitian metode kuantitatif menekank...</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>ABSTRAK\n\n“Pengaruh IMC (Integrated Marketing...</td>
-      <td>ABSTRAK Pengaruh Integrated Marketing Communic...</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>Rajungan (Portunus pelagicus) merupakan komodi...</td>
-      <td>Rajungan Portunus pelagicus komoditas nilai ek...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
     </tr>
   </tbody>
 </table>
@@ -846,63 +881,59 @@ title="Print to PDF"
   <tbody>
     <tr>
       <th>0</th>
-      <td>ABSTRAK Tsunami bencana ancaman masyarakat wil...</td>
+      <td>Tujuan penelitian pengaruh variabel Retailing ...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Sepak bola salah olahraga digemari remaja bela...</td>
+      <td>Tujuan penelitian mengidentifikasi variabel-va...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Penelitian bertujuan kelayakan keterbacaan res...</td>
+      <td>ABSTRAK Penelitian rumusan pelaporan biaya kua...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Penelitian bertujuan persentase miskonsepsi si...</td>
+      <td>Abstrak Aththaariq Pengaruh Kompetensi Dosen T...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Mikroplastik sampah plastik mengalami degradas...</td>
+      <td>Badan Usaha Milik Negara bergerak bidang penye...</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>ABSTRACT Nafilatun Nasuha 160511100005 Analysi...</td>
+      <td>ABSTRAK Tujuan penelitian mendeskripsikan inov...</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>Apie Indo Karunia perusahaan bidang industri m...</td>
+      <td>ABSTRAK Dharma Abidin Syah Kesimpulan Terdapat...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Pesisir Pantai Kenjeran kawasan potensi wisata...</td>
+      <td>ABSTRAK Haryono Arifin Pengaruh Perilaku Konsu...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Perbedaan harga diterapkan pemilik jasa transp...</td>
+      <td>ABSTRAK Tujuan penelitian mengidentifikasi var...</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>ABSTRAK Remoh blater diadakan berkumpulnya bla...</td>
+      <td>Hasil penelitian perhitungan Credit Risk Ratio...</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>Penduduk Indonesia mayoritas beragama Islam me...</td>
+      <td>Tujuan penelitian persepsi brand association p...</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>Perguruan Tinggi salah jenjang pendidikan Seko...</td>
+      <td>ABSTRAK Satiyah Pengaruh Faktor-faktor Pelatih...</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>Financial Distress ketidakmampuan perusahaan m...</td>
+      <td>Abstrak Penelitian metode kuantitatif menekank...</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>ABSTRAK Pengaruh Integrated Marketing Communic...</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>Rajungan Portunus pelagicus komoditas nilai ek...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
     </tr>
   </tbody>
 </table>
@@ -930,12 +961,15 @@ d f_{i} &amp;=\text { banyaknya dokumen yang mengandung kata ke- } i
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vect_text</span><span class="o">=</span><span class="n">vect</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Abstrak_Cleaned&#39;</span><span class="p">])</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Arlaz\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\feature_extraction\text.py:396: UserWarning: Your stop_words may be inconsistent with your preprocessing. Tokenizing the stop words generated tokens [&#39;baiknya&#39;, &#39;berkali&#39;, &#39;kali&#39;, &#39;kurangnya&#39;, &#39;mata&#39;, &#39;olah&#39;, &#39;sekurang&#39;, &#39;setidak&#39;, &#39;tama&#39;, &#39;tidaknya&#39;] not in stop_words.
   warnings.warn(
+C:\Users\Arlaz\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
+  warnings.warn(msg, category=FutureWarning)
 </pre></div>
 </div>
 </div>
@@ -949,58 +983,58 @@ d f_{i} &amp;=\text { banyaknya dokumen yang mengandung kata ke- } i
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(15, 844)
-  (0, 405)	0.018631972882534036
-  (0, 22)	0.03642083100821103
-  (0, 45)	0.031625358847996596
-  (0, 69)	0.03642083100821103
-  (0, 25)	0.031625358847996596
-  (0, 57)	0.03642083100821103
-  (0, 66)	0.03642083100821103
-  (0, 56)	0.03642083100821103
-  (0, 23)	0.031625358847996596
-  (0, 13)	0.031625358847996596
-  (0, 71)	0.03642083100821103
-  (0, 82)	0.03642083100821103
-  (0, 77)	0.03642083100821103
-  (0, 53)	0.03642083100821103
-  (0, 6)	0.07284166201642206
-  (0, 12)	0.03642083100821103
-  (0, 81)	0.03642083100821103
-  (0, 48)	0.03642083100821103
-  (0, 5)	0.03642083100821103
-  (0, 15)	0.03642083100821103
-  (0, 1)	0.03642083100821103
-  (0, 75)	0.03642083100821103
-  (0, 59)	0.03642083100821103
-  (0, 16)	0.03642083100821103
-  (0, 685)	0.158126794239983
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(14, 516)
+  (0, 258)	0.02013461747206666
+  (0, 342)	0.03041989600152473
+  (0, 447)	0.06558282473832959
+  (0, 451)	0.028298502322094705
+  (0, 150)	0.0525400341839688
+  (0, 142)	0.0525400341839688
+  (0, 22)	0.060703919033996835
+  (0, 453)	0.0525400341839688
+  (0, 29)	0.060703919033996835
+  (0, 484)	0.14024299710474247
+  (0, 86)	0.03858378085155277
+  (0, 97)	0.060703919033996835
+  (0, 31)	0.060703919033996835
+  (0, 462)	0.0525400341839688
+  (0, 54)	0.060703919033996835
+  (0, 328)	0.03858378085155277
+  (0, 180)	0.02462752751913675
+  (0, 88)	0.11575134255465833
+  (0, 283)	0.060703919033996835
+  (0, 89)	0.0354800158801719
+  (0, 268)	0.03858378085155277
+  (0, 422)	0.03858378085155277
+  (0, 113)	0.032791412369164795
+  (0, 64)	0.028298502322094705
+  (0, 477)	0.03041989600152473
   :	:
-  (14, 425)	0.05273718780685194
-  (14, 525)	0.05273718780685194
-  (14, 254)	0.042662489122572284
-  (14, 18)	0.05273718780685194
-  (14, 38)	0.05273718780685194
-  (14, 52)	0.05273718780685194
-  (14, 193)	0.05273718780685194
-  (14, 802)	0.04706341174320538
-  (14, 164)	0.10547437561370387
-  (14, 324)	0.10547437561370387
-  (14, 815)	0.05273718780685194
-  (14, 307)	0.05273718780685194
-  (14, 707)	0.07813334703915271
-  (14, 35)	0.05273718780685194
-  (14, 34)	0.04706341174320538
-  (14, 200)	0.09412682348641076
-  (14, 72)	0.04706341174320538
-  (14, 449)	0.05273718780685194
-  (14, 170)	0.05273718780685194
-  (14, 528)	0.03906667351957636
-  (14, 812)	0.042662489122572284
-  (14, 25)	0.05273718780685194
-  (14, 800)	0.04706341174320538
-  (14, 584)	0.06706782137711713
-  (14, 457)	0.042662489122572284
+  (13, 228)	0.25027190223846824
+  (13, 20)	0.05005438044769365
+  (13, 379)	0.1001087608953873
+  (13, 414)	0.05005438044769365
+  (13, 435)	0.044536047233530204
+  (13, 100)	0.05005438044769365
+  (13, 274)	0.15016314134308092
+  (13, 494)	0.1001087608953873
+  (13, 500)	0.15016314134308092
+  (13, 240)	0.04025569545404981
+  (13, 122)	0.04025569545404981
+  (13, 490)	0.04025569545404981
+  (13, 251)	0.044536047233530204
+  (13, 266)	0.05005438044769365
+  (13, 258)	0.01918205457550151
+  (13, 180)	0.023462406354981903
+  (13, 88)	0.07351678680267555
+  (13, 113)	0.06248012037434866
+  (13, 64)	0.08087912522308181
+  (13, 477)	0.05796147913829069
+  (13, 439)	0.03124006018717433
+  (13, 437)	0.028980739569145344
+  (13, 96)	0.04025569545404981
+  (13, 351)	0.08907209446706041
+  (13, 358)	0.0820219184067391
 </pre></div>
 </div>
 </div>
@@ -1016,28 +1050,25 @@ d f_{i} &amp;=\text { banyaknya dokumen yang mengandung kata ke- } i
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dd</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">vect</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(),</span> <span class="n">idf</span><span class="p">))</span>
 <span class="n">l</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="n">dd</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
-<span class="c1"># print(l)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">l</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;penelitian&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;salah&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">l</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;kunci&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;wispandono&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;wildan&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penelitian yusuf
-1.1335313926245225
-1.9808292530117262
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Arlaz\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-  warnings.warn(msg, category=FutureWarning)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>kunci wildan
+1.0
+3.0149030205422647
+3.0149030205422647
 </pre></div>
 </div>
 </div>
 </div>
 <h2>Latent Semantic Analysis atau LSA</h2>
 <p></p>
-<p>disini untuk pengimplementasian LSA dengan menggunakan SVD, juga  SVD digunakan untuk menguraikan hasil Tfisf yang telah dilakukan tadi.</p>
+<p>disini untuk pengimplementasian LSA dengan menggunakan SVD</p>
 <p>Untuk contoh SVD adalah sebagi berikut:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1066,8 +1097,7 @@ A A^{\prime}=\left(\begin{array}{cc}
 \end{split}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">TruncatedSVD</span>
-<span class="n">lsa_model</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;randomized&#39;</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lsa_model</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;randomized&#39;</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="n">lsa_top</span><span class="o">=</span><span class="n">lsa_model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">vect_text</span><span class="p">)</span>
 </pre></div>
@@ -1082,22 +1112,21 @@ A A^{\prime}=\left(\begin{array}{cc}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[ 0.11994897 -0.01051296  0.08105641  0.11256692 -0.09064629]
- [ 0.20315669  0.01269914  0.02165167  0.58943444  0.42293177]
- [ 0.47379765  0.54541601 -0.20352067 -0.15122582 -0.12819496]
- [ 0.53782527  0.50770312 -0.13261083 -0.11246617 -0.18204632]
- [ 0.14584396 -0.01584323  0.54320179  0.02921427 -0.25947183]
- [ 0.03922425 -0.01276815  0.0125468  -0.03449408  0.06902527]
- [ 0.15690601  0.02741511  0.25184825 -0.38160175  0.59855325]
- [ 0.32610997 -0.16876551  0.21495245  0.20439047  0.02146743]
- [ 0.3578253  -0.51132219 -0.36859283 -0.09197588 -0.10353055]
- [ 0.184262   -0.08179551  0.15824047  0.08973053 -0.11198225]
- [ 0.42407548 -0.12954227  0.19051848 -0.09296513  0.08923824]
- [ 0.25963146  0.1166736  -0.14396138  0.52614111  0.24762563]
- [ 0.18891138 -0.07756675  0.09409916 -0.37717992  0.43035403]
- [ 0.41362869 -0.53656481 -0.26641661 -0.07638426 -0.12892666]
- [ 0.20980336 -0.09520383  0.55307148  0.05361682 -0.26028925]]
-(15, 5)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[ 0.56325723 -0.31185761 -0.30663116 -0.21284195 -0.05738355]
+ [ 0.35192685 -0.1241204  -0.03493777  0.25731728  0.09997027]
+ [ 0.15905043 -0.17968417  0.28752938 -0.16631705 -0.3737704 ]
+ [ 0.32783907 -0.10250827  0.21763634 -0.13865279  0.49358641]
+ [ 0.42894564  0.43008771  0.1576426   0.28959261 -0.20010739]
+ [ 0.13433731 -0.13402033  0.59449779 -0.23663343 -0.19095027]
+ [ 0.5178398   0.47616506 -0.03334935 -0.09175598  0.15314264]
+ [ 0.4140585  -0.31976306 -0.30996231 -0.11769575 -0.41649135]
+ [ 0.53412019 -0.33412258 -0.14421438  0.10204025  0.07908344]
+ [ 0.08260769 -0.09010578  0.48698849 -0.39714767 -0.03428273]
+ [ 0.20335891 -0.2845925   0.19149525  0.53555011 -0.25432758]
+ [ 0.37840665  0.51446246  0.13944044  0.18077865 -0.2480235 ]
+ [ 0.62548593  0.17515681 -0.08590174 -0.27323556  0.20395752]
+ [ 0.19294598 -0.30883867  0.3362438   0.39880337  0.40425409]]
+(14, 5)
 </pre></div>
 </div>
 </div>
@@ -1113,46 +1142,46 @@ A A^{\prime}=\left(\begin{array}{cc}
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Document 0 :
-Topic  0  :  11.994896585744918
-Topic  1  :  -1.051295898724832
-Topic  2  :  8.105641385249038
-Topic  3  :  11.256691836357984
-Topic  4  :  -9.06462909864445
+Topic  0  :  56.32572333122779
+Topic  1  :  -31.185761176789057
+Topic  2  :  -30.663116218670687
+Topic  3  :  -21.284195412821525
+Topic  4  :  -5.738355478823403
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">lsa_model</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># (no_of_topics*no_of_words)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">lsa_model</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">lsa_model</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5, 844)
-[[ 0.01613924  0.00315833  0.01613924 ...  0.01627491  0.00220921
-   0.07782371]
- [-0.00574655 -0.00032266 -0.00574655 ... -0.02460854 -0.00083824
-  -0.1296257 ]
- [ 0.0093334   0.00274734  0.0093334  ... -0.01349374  0.00090966
-  -0.10319314]
- [-0.00471461  0.00394964 -0.00471461 ... -0.00400495 -0.00258888
-  -0.02665633]
- [ 0.00456259 -0.00320651  0.00456259 ... -0.00681509  0.0052229
-  -0.03025033]]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5, 516)
+[[ 1.69920987e-02  7.71949070e-03  3.91988708e-03 ...  1.05236423e-02
+   7.71949070e-03  7.71949070e-03]
+ [ 6.84697749e-04 -4.00251674e-03 -7.09009430e-03 ... -2.79324035e-02
+  -4.00251674e-03 -4.00251674e-03]
+ [-1.05122467e-02  9.57266340e-03  4.31663380e-02 ...  3.42576889e-02
+   9.57266340e-03  9.57266340e-03]
+ [ 1.63038619e-05 -6.64527471e-03 -3.83584893e-02 ...  4.42736729e-02
+  -6.64527471e-03 -6.64527471e-03]
+ [-3.12559728e-02  2.44344123e-02 -3.42010348e-03 ...  4.63548871e-02
+   2.44344123e-02  2.44344123e-02]]
 </pre></div>
 </div>
 </div>
 </div>
-<p>Disini hanya terdapat 5 topic dikarenakan saat proses TruncatedSVD parameter untuk dimensi keluaran yang diinginkan hanya diisi 5.</p><div class="cell docutils container">
+<p>Disini hanya terdapat 5 topic dikarenakan saat proses TruncatedSVD parameter untuk dimensi keluaran yang diinginkan hanya diisi 5 dan dibatasi 20 kata saja</p><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># most important words for each topic</span>
 <span class="n">vocab</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lsa_model</span><span class="o">.</span><span class="n">components_</span><span class="p">):</span>
     <span class="n">vocab_comp</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
-    <span class="n">sorted_words</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">vocab_comp</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">sorted_words</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">vocab_comp</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Topic &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;: &quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_words</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
@@ -1162,19 +1191,19 @@ Topic  4  :  -9.06462909864445
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Topic 0: 
-siswa penelitian religi dinyatakan miskonsepsi produk wisata arus kualitas faktor 
+variabel penelitian kerja konsumen pegawai kepemimpinan signifikan pengaruh hipotesis pembelian kepuasan kompensasi nilai berpengaruh prestasi keputusan kompetensi pelayanan pengujian pengembangan 
 
 Topic 1: 
-siswa dinyatakan miskonsepsi generik kelayakan kerja keterampilan sains faktor layak 
+kerja pengembangan pegawai prestasi faktor produktivitas tipe kepemimpinan pelatihan karir karyawan semangat dinas kabupaten kelautan perikanan sampang demokratis kecamatan pangarengan 
 
 Topic 2: 
-rajungan ikan mikroplastik partikel swanggi sampel bentuk baku laju arus 
+bersaing inovasi keunggulan lamongan 2011 data mengalami akademik kompetensi bank resiko optik pemasaran reza tingkat 2008 kinerja daerah biaya pelanggan 
 
 Topic 3: 
-bola sepak mahasiswa pemain keputusan posisi kriteria perguruan snmptn arus 
+dimensi pelanggan persepsi akademik kepuasan association brand cranberries distro kiddrock kerja pengembangan portal pakaian karir karyawan semangat banking internet indeks 
 
 Topic 4: 
-baku bank bahan bola sepak pemain perusahaan stock mahasiswa syariah 
+kompetensi dosen akademik kepuasan madura universitas variabel portal kinerja trunojoyo nilai pedagogik kepemimpinan indeks kompensasi kepribadian profesional administrasi importance informasi 
 </pre></div>
 </div>
 </div>
@@ -1208,11 +1237,11 @@ baku bank bahan bola sepak pemain perusahaan stock mahasiswa syariah
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="Program_Crawling.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="kmeans.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Program Crawling</p>
+            <p class="prev-next-title">Nomer 1 : Pre Processing Data, Tfidf dan K-Means</p>
         </div>
     </a>
 </div>

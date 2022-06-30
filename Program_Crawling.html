@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Program Crawling &#8212; PPW_LDA</title>
+    <title>Program Crawling &#8212; PPW_Teguh_19-059</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Topic Modeling dengan LSA" href="UAS_PPW.html" />
+    <link rel="next" title="Nomer 1 : Pre Processing Data, Tfidf dan K-Means" href="kmeans.html" />
     <link rel="prev" title="Welcome to your Jupyter Book" href="intro.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -97,7 +97,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">PPW_LDA</h1>
+      <h1 class="site-logo" id="site-title">PPW_Teguh_19-059</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -120,8 +120,13 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="UAS_PPW.html">
-   Topic Modeling dengan LSA
+  <a class="reference internal" href="kmeans.html">
+   Nomer 1 : Pre Processing Data, Tfidf dan K-Means
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="LSA.html">
+   Nomer 2 : Topic Modeling dengan LSA
   </a>
  </li>
 </ul>
@@ -335,7 +340,9 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="program-crawling">
 <h1>Program Crawling<a class="headerlink" href="#program-crawling" title="Permalink to this headline">#</a></h1>
 <p>Langkat pertama yang dilakukan yaitu crawling untuk mendapatkan link yang nantinya untuk dicrawling teks yang diinginkan.<p>
-<p>Untuk menjalankan program dibawah ialah dengan memberikan perintah lewat CMD yang telah masuk ke direktori file tersimpan. Dengan mengetik "scrapyrun spider namafilepynya.py -o namafilebaru.csv"</p><div class="cell docutils container">
+<p>Untuk menjalankan program dibawah ialah dengan memberikan perintah lewat CMD yang telah masuk ke direktori file tersimpan. Dengan mengetik "scrapy runspider namafilepynya.py -o namafilebaru.csv"</p>
+<p>Untuk saya, disini file csv tersimpan dengan nama hasil_link.csv</p>
+<p>Untuk Programnya sebagai berikut.</p><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scrapy</span>
 
@@ -345,11 +352,9 @@ title="Print to PDF"
 
     <span class="k">def</span> <span class="nf">start_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">start_url</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s1">&#39;https://pta.trunojoyo.ac.id/welcome/index/31&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;https://pta.trunojoyo.ac.id/welcome/index/32&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;https://pta.trunojoyo.ac.id/welcome/index/33&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;https://pta.trunojoyo.ac.id/welcome/index/34&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;https://pta.trunojoyo.ac.id/welcome/index/35&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;https://pta.trunojoyo.ac.id/c_search/byprod/7&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;https://pta.trunojoyo.ac.id/c_search/byprod/7/2&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;https://pta.trunojoyo.ac.id/c_search/byprod/7/3&#39;</span><span class="p">,</span>
                 <span class="p">]</span>
         <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">start_url</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">)</span>
@@ -357,13 +362,13 @@ title="Print to PDF"
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s1">&#39;#content_journal &gt; ul &gt; li&#39;</span><span class="p">):</span>
             <span class="k">yield</span> <span class="p">{</span>
-                <span class="s1">&#39;Link&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;div:nth-child(3) &gt; div:nth-child(5) &gt; a::attr(href)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                <span class="s1">&#39;Link&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;div:nth-child(3) &gt;  a::attr(href)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
             <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Setelah mendapatkan file csv dari program pertama maka akan dilakukan crawling ke dua untuk mendpatkan data yang diinginkan</p><p>Untuk hasil_link.csv namanya dapat diganti sesuai dari penamaan dokumen crawling yang pertama. Untuk crawlingnya sendiri caranya sama dengan yang pertama</p><div class="cell docutils container">
+<p>Setelah mendapatkan file csv dari program pertama maka akan dilakukan crawling ke dua untuk mendapatkan data yang diinginkan</p><p>Untuk hasil_link.csv namanya dapat diganti sesuai dari penamaan dokumen crawling yang pertama. Untuk crawlingnya sendiri caranya sama dengan yang pertama yaitu dengan menulisakan perintah lewat CMD yang telah masuk ke direktori file tersimpan. Dengan mengetik "scrapy runspider namafilepynya.py -o namafilebaru.csv"</p><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scrapy</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -424,10 +429,10 @@ title="Print to PDF"
             <p class="prev-next-title">Welcome to your Jupyter Book</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="UAS_PPW.html" title="next page">
+    <a class='right-next' id="next-link" href="kmeans.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Topic Modeling dengan LSA</p>
+        <p class="prev-next-title">Nomer 1 : Pre Processing Data, Tfidf dan K-Means</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

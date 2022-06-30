@@ -1,0 +1,785 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Nomer 1 : Pre Processing Data, Tfidf dan K-Means &#8212; PPW_Teguh_19-059</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Nomer 2 : Topic Modeling dengan LSA" href="LSA.html" />
+    <link rel="prev" title="Program Crawling" href="Program_Crawling.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">PPW_Teguh_19-059</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Program_Crawling.html">
+   Program Crawling
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Nomer 1 : Pre Processing Data, Tfidf dan K-Means
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="LSA.html">
+   Nomer 2 : Topic Modeling dengan LSA
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/kmeans.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fkmeans.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/kmeans.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Nomer 1 : Pre Processing Data, Tfidf dan K-Means</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="nomer-1-pre-processing-data-tfidf-dan-k-means">
+<h1>Nomer 1 : Pre Processing Data, Tfidf dan K-Means<a class="headerlink" href="#nomer-1-pre-processing-data-tfidf-dan-k-means" title="Permalink to this headline">#</a></h1>
+<h2>Import Library</h2>
+<p>Langkah pertama adalah melakukan import library yang dimana nantinya digunakan untuk membaca data mauapaun memanipulasi data, untuk tahapan preprocessing, Tf-idf, maupun untuk K means clustering</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="kn">import</span> <span class="n">RegexpTokenizer</span>
+<span class="kn">from</span> <span class="nn">nltk.stem.snowball</span> <span class="kn">import</span> <span class="n">SnowballStemmer</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">Sastrawi.Stemmer.StemmerFactory</span> <span class="kn">import</span> <span class="n">StemmerFactory</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<h2>Membaca Dokumen</h2>
+<p>Setelahnya, proses yang dilakukan adalah membuka dokumen hasil Crawling yang telah dilakukan sebelumnya.</p>
+<p>Juga, menampilkan file hasil crawling, dan dapat dilihat dibawah data hasil crawling berjumlah 15</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;hasil_crawling.csv&#39;</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Judul</th>
+      <th>Abstrak</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Pengaruh Retailing Mix terhadap Keputusan Pemb...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>PENGARUH PERSEPSI MANFAAT, PERSEPSI KEMUDAHAN,...</td>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>PELAPORAN BIAYA KUALITAS UNTUK MEMINIMALKAN TE...</td>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>PENGARUH KOMPETENSI DOSEN TERHADAP KINERJA DOS...</td>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>PENGARUH PENGEMBANGAN KARIR TERHADAP SEMANGAT ...</td>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Analisis Inovasi Dan Keunggulan Bersaing \r\nD...</td>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>PENGARUH TIPE KEPEMIMPINAN TERHADAP PRESTASI K...</td>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>PENGARUH PERILAKU KONSUMEN TERHADAP KEPUTUSAN ...</td>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>PENGARUH DIMENSI KUALITAS PELAYANAN TERHADAP K...</td>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ANALISIS TINGKAT RISIKO KREDIT \r\nPADA PD. BP...</td>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>ANALISIS PERSEPSI BRAND ASSOCIATION MENURUT PE...</td>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>PENGARUH FAKTOR-FAKTOR PELATIHAN DAN PENGEMBAN...</td>
+      <td>ABSTRAK\r\...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>PENGARUH KEPEMIMPINAN DAN KOMPENSASI TERHADAP ...</td>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Pengukuran Website Quality Pada Situs Sistem A...</td>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>PENGARUH GAYA KEPEMIMPINAN DEMOKRATIK TERHADAP...</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Dikarenakan pada data ke 15 atau index 14 data Abstraknya NaN atau kosong, maka disini data pada baris tersebut akan dihilangkan</p>
+<p>Juga disini akan membuang kolom yang tidak digunakan, kolom yang dibuang adalah kolom Judul.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="mi">14</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Judul&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Abstrak</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Tujuan penelitian ini adalah untuk mengidentif...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ABSTRAK\r\n\r\nPenelitian ini mengungkapkan be...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Abstrak\r\n\r\nAththaariq, Pengaruh Kompetensi...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>PLN merupakan Badan Usaha Milik Negara yang be...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>ABSTRAK\r\n\tTujuan penelitian ini adalah mend...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ABSTRAK\r\n\tDharma Abidin Syah,Kesimpulan: (1...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>ABSTRAK\r\nHaryono Arifin, Pengaruh Perilaku K...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>ABSTRAK\r\n\r\nTujuan penelitian ini adalah un...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Hasil dari penelitian ini dari perhitungan Cre...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Tujuan penelitian ini adalah untuk mengetahui ...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>ABSTRAK\r\...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Abstrak\r\nPenelitian ini menggunakan metode k...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Aplikasi nyata pemanfaatan teknologi informasi...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<h2>Stopword</h2>
+<p>Disini menggunakan stopwords indonesia, juga menambahkan beberapa stopword yang mungkin dibutuhkan untuk menghilangkan kata-kata yang tidak diperlukan.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_stopwords</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;indonesian&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># manualy add stopword</span>
+<span class="c1"># append additional stopword</span>
+<span class="n">list_stopwords</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;yg&quot;</span><span class="p">,</span> <span class="s2">&quot;dg&quot;</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">,</span> <span class="s2">&quot;dgn&quot;</span><span class="p">,</span> <span class="s2">&quot;ny&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s1">&#39;klo&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;kalo&#39;</span><span class="p">,</span> <span class="s1">&#39;amp&#39;</span><span class="p">,</span> <span class="s1">&#39;biar&#39;</span><span class="p">,</span> <span class="s1">&#39;bikin&#39;</span><span class="p">,</span> <span class="s1">&#39;bilang&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;gak&#39;</span><span class="p">,</span> <span class="s1">&#39;ga&#39;</span><span class="p">,</span> <span class="s1">&#39;krn&#39;</span><span class="p">,</span> <span class="s1">&#39;nya&#39;</span><span class="p">,</span> <span class="s1">&#39;nih&#39;</span><span class="p">,</span> <span class="s1">&#39;sih&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;si&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">,</span> <span class="s1">&#39;tdk&#39;</span><span class="p">,</span> <span class="s1">&#39;tuh&#39;</span><span class="p">,</span> <span class="s1">&#39;utk&#39;</span><span class="p">,</span> <span class="s1">&#39;ya&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;jd&#39;</span><span class="p">,</span> <span class="s1">&#39;jgn&#39;</span><span class="p">,</span> <span class="s1">&#39;sdh&#39;</span><span class="p">,</span> <span class="s1">&#39;aja&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;nyg&#39;</span><span class="p">,</span> <span class="s1">&#39;hehe&#39;</span><span class="p">,</span> <span class="s1">&#39;pen&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;loh&#39;</span><span class="p">,</span> <span class="s1">&#39;rt&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;&amp;amp&#39;</span><span class="p">,</span> <span class="s1">&#39;yah&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<h2>Stemming dan Tokenizing</h2>
+<p>Pada bagian ini, membuat fungsi untuk proses stemming dan tokensisasi sekaligus mengubah ukuran huruf menjadi lower case semua.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">StemmerFactory</span><span class="p">()</span>
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_stemmer</span><span class="p">()</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">RegexpTokenizer</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-zA-Z</span><span class="se">\&#39;</span><span class="s1">]+&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<h2>Tfidf</h2>
+<p>Pada prses ini dilakukan proses Tfidf</p>
+<p>Dalam TfidfVectorizer sendiri telah terset default untuk membuat semua huruf menjadi lowercase </p>
+</p>
+<p>Untuk rumus Tfidf sendiri adalah sebagai berikut</p><p><span class="math notranslate nohighlight">\(w_{i, j}=t f_{i, j} \times \log \left(\frac{N}{d f_{i}}\right)\)</span></p>
+<p><span class="math notranslate nohighlight">\(
+\begin{aligned}
+t f_{i, j} &amp;=\text { banyaknya kata- } i \text { pada dokumen ke- } j \\
+N &amp;=\text { total dokumen } \\
+d f_{i} &amp;=\text { banyaknya dokumen yang mengandung kata ke- } i
+\end{aligned}
+\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">desc</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Abstrak&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span> <span class="o">=</span> <span class="n">list_stopwords</span><span class="p">,</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+<span class="n">word_features</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Arlaz\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\feature_extraction\text.py:396: UserWarning: Your stop_words may be inconsistent with your preprocessing. Tokenizing the stop words generated tokens [&#39;arti&#39;, &#39;asa&#39;, &#39;buah&#39;, &#39;bum&#39;, &#39;enak&#39;, &#39;hadap&#39;, &#39;ikan&#39;, &#39;ira&#39;, &#39;jenak&#39;, &#39;kali&#39;, &#39;kena&#39;, &#39;kerja&#39;, &#39;khusus&#39;, &#39;laku&#39;, &#39;langsung&#39;, &#39;lihat&#39;, &#39;maksud&#39;, &#39;masuk&#39;, &#39;mata&#39;, &#39;mena&#39;, &#39;nyata&#39;, &#39;olah&#39;, &#39;orang&#39;, &#39;rupa&#39;, &#39;sampa&#39;, &#39;sangkut&#39;, &#39;sekal&#39;, &#39;sekira&#39;, &#39;sin&#39;, &#39;tama&#39;, &#39;tuju&#39;, &#39;upa&#39;, &#39;utama&#39;] not in stop_words.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\Arlaz\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
+  warnings.warn(msg, category=FutureWarning)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Dapat dilihat disini, jumlah fitur yang ada berjumlah 430 dan ditampilkan juga 50 fitur awal</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word_features</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">word_features</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>430
+[&#39;a&#39;, &#39;abidin&#39;, &#39;abstrak&#39;, &#39;accidental&#39;, &#39;adjusted&#39;, &#39;administrasi&#39;, &#39;agung&#39;, &#39;akademik&#39;, &#39;aksidental&#39;, &#39;aktif&#39;, &#39;akurat&#39;, &#39;alami&#39;, &#39;alat&#39;, &#39;alkirom&#39;, &#39;aman&#39;, &#39;ambil&#39;, &#39;analis&#39;, &#39;analisis&#39;, &#39;analitik&#39;, &#39;analysis&#39;, &#39;anova&#39;, &#39;anugrahini&#39;, &#39;aplikasi&#39;, &#39;apresisasikan&#39;, &#39;arifin&#39;, &#39;arti&#39;, &#39;association&#39;, &#39;asumsi&#39;, &#39;aththaariq&#39;, &#39;atmosfer&#39;, &#39;atribut&#39;, &#39;aulia&#39;, &#39;autoritarian&#39;, &#39;autoritariansecara&#39;, &#39;b&#39;, &#39;badan&#39;, &#39;bangkal&#39;, &#39;bank&#39;, &#39;banking&#39;, &#39;bantu&#39;, &#39;barokah&#39;, &#39;bebas&#39;, &#39;beda&#39;, &#39;beli&#39;, &#39;beta&#39;, &#39;biaya&#39;, &#39;bidang&#39;, &#39;bimbing&#39;, &#39;bisnis&#39;, &#39;bpr&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<h2>K Means Clustering</h2>
+<p>Disini setelah melakukan proses Tfidf selanjutnya akan dilakukan pembagian fitur-fitur kedalam beberapa cluster sesuai yang diinginkan dengan menggunakan metode Kmeans.</p><h3>5 Clusters</h3>
+<p>Disini akan dilakukan pembagian dari 5 cluster dan proses pembagiannya dilakukan dengan 20 iterasi. </p>
+<p>Setiap clusternya akan ditampilkan 20 fitur.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_init</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">common_words</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">21</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">space</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">common_words</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; : &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word_features</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">centroid</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 : variabel, beli, persepsi, dimensi, teliti, putus, konsumen, uji, pengaruh, merek, internet, banking, honda, vario, layan, hadap, bri, ulang, minat, harga
+1 : x, variabel, kerja, pengaruh, kompetensi, pegawai, hadap, pimpin, kembang, uji, prestasi, teliti, nilai, tipe, signifikan, kompensasi, produktivitas, y, pln, puas
+2 : akademik, puas, portal, langgan, indeks, informasi, webqual, performance, administrasi, importance, mahasiswa, madura, universitas, layan, mutu, situs, website, utm, teknis, ki
+3 : lamongan, inovasi, unggul, saing, bank, npl, resiko, tingkat, alami, pasar, daerah, optik, reza, pd, ratio, bpr, turun, credit, risk, data
+4 : biaya, lapor, profitabilitas, cacat, kualitas, risiko, produk, tingkat, pengaruh, usaha, inti, cv, kapuas, perinci, sarana, teliti, rumus, fenomena, periodik, minimal
+</pre></div>
+</div>
+</div>
+</div>
+<p>Untuk hasil tanpa batasan penampilan tiap cluster hanya 20 akan menjadi seperti berikut</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_init</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">common_words</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+<span class="n">space</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">common_words</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; : &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word_features</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">centroid</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 : a, perinci, perilaku, performance, percaya, perangkat, pengolaha, pengembnagan, pengaruh, pegawaidikantor, periodik, pegawai, partisipasi, parsial, pangarengan, pamekasan, paktek, pakai, orgnisasional, orang, optimalisasi, pedagogik, persepsi, personal, pimpin, psikologis, proses, promosi, program, profitabilitas, profesional, produktivitas, probality, prioritas, primer, pribadi, prestasi, presepsi, prambon, praktek, positivisme, positif, portal, populasi, pns, pln, online, puas, olah, nyata, manusia, manfaat, mahasiswa, madura, m, lunak, lukis, x, listrik, mart, linier, layan, laut, latih, lapor, lapang, langsung, langgan, landas, laksana, likert, masuk, menganalisa, mentor, nilai, negeri, negara, nasional, nasabah, mutu, muhammad, mudah, mt, ms, motor, motivasi, moch, mm, mix, minimal, minat, milik, metode, merek, merchandise, observasional, purposive, pustaka, putus, thitung, terima, terampil, ter, temu, teknologi, teknis, tekan, tanggap, tingkah, tabel, surya, survei, sumbr, sumber, suasana, studi, stratified, status, statistik, syah, tinjau, tipe, transkrip, wispandono, wildan, website, webqual, versi, vario, variabel, validitas, utm, utama, update, upaya, universitas, ulang, ukur, uji, ubah, tuntut, tumbuh, trunojoyo, trunjoyo, st, square, spss, sponsor, sampling, sampelpenelitianiniadalahmahasiswaangkatan, sampel, sampang, salah, s, rupa, rumus, rm, risiko, riset, retailing, retailimg, responden, research, reliabilitas, rekomendasi, regresi, reabilitas, random, r, sarana, laissez, satiyah, sebar, sosial, skor, skala, situs, sistematis, sistem, sisa, sipil, simultan, simple, sikap, signifikansi, signifikan, sifat, setia, sesuai, sertifikasi, semangat, selenggara, seleksi, sedia, sdm, lai, lokasi, dra, diagram, dharma, determinasi, detail, desember, depot, dependen, demokratis, dealler, dianalisa, dealer, cv, cranberriess, cranberries, cipta, capai, camat, cacat, cabang, buyung, daya, butuh, didik, dinas, fisik, filsafat, field, fhitung, fenomena, faktual, faktor, fairesecara, faire, dimensi, f, efisien, efektif, e, dukung, kwanyar, dr, dosen, dominan, distro, empati, fitur, budaya, brand, apresisasikan, aplikasi, anugrahini, anova, analysis, analitik, analis, ambil, aman, arifin, alkirom, akurat, aktif, aksidental, akademik, agung, administrasi, adjusted, accidental, abidin, alat, bri, arti, asumsi, bisnis, bimbing, bidang, biaya, beta, beli, beda, bebas, barokah, association, bantu, bangkal, badan, b, autoritariansecara, autoritarian, aulia, atribut, atmosfer, aththaariq, banking, fokus, y, gambar, internet, khs, instrumen, ki, kiddrock, kip, klasik, instruktur, koefisien, instansi, koefisiensi, informasi, kompensasi, individu, kompetensi, kendala, kartesius, kenal, kena, karir, kapuas, kantor, kabupaten, kategori, judgmental, kecuali, kehandalan, ftabel, jasa, jamin, jabat, irawati, kelola, kembang, inti, indeks, independen, importance, honda, hj, kuat, kuesioner, hipotesis, helm, kuisioner, haryono, harga, harap, hadap, guru, gerak, gerai, ganda, komunikasi, kuantitatif, hubung, kuantitaif, kondusif, implementasi, konsumen, identifikasi, kontribusi, kota, karyawan, ikp, kualitas, ikat, ikan, idola, krs, tuju, analisis, abstrak, deskriptif, usaha, bukti, produk, deskripsi, kunci, jual, kumpul, luas, simpul, dasar, dokumen, reduction, kualitatif, pangsa, drawing, timur, verification, volume, omzet, display, buah, fenomenologi, conclusion, tawar, observasi, wawancara, teknik, hasil, non, hitung, laku, lihat, syarat, maksimal, dikatagorikan, loan, performing, indonesia, kerja, terap, jawa, teliti, data, risk, credit, turun, bpr, ratio, pd, reza, optik, daerah, pasar, alami, tingkat, resiko, npl, bank, saing, unggul, inovasi, lamongan
+1 : lokasi, indeks, psikologis, promosi, indonesia, informasi, inovasi, profitabilitas, instrumen, internet, inti, produk, prioritas, jasa, jawa, jual, presepsi, positivisme, portal, kapuas, personal, kartesius, persepsi, kategori, importance, kecuali, implementasi, purposive, filsafat, risiko, fitur, merek, riset, gambar, reza, gerai, retailing, guru, retailimg, resiko, harga, haryono, research, rekomendasi, reduction, reabilitas, ratio, honda, putus, idola, pustaka, ikp, field, periodik, perilaku, observasi, npl, lamongan, landas, langgan, lapang, lapor, nasabah, mutu, likert, motor, loan, luas, lukis, lunak, mix, minimal, mahasiswa, maksimal, manfaat, minat, mart, masuk, kwanyar, perinci, omzet, online, kena, performing, kendala, performance, khs, ki, kiddrock, kip, klasik, percaya, perangkat, pengolaha, komunikasi, pd, pasar, kota, krs, pangsa, kualitatif, kuantitaif, pamekasan, pakai, optik, kumpul, risk, fokus, fenomena, atribut, ulang, turun, trunjoyo, transkrip, bank, banking, bantu, tinjau, timur, beli, biaya, terima, bpr, fenomenologi, bri, buah, budaya, ter, temu, teknologi, atmosfer, unggul, asumsi, association, website, webqual, wawancara, adjusted, administrasi, agung, akademik, aksidental, volume, akurat, teknis, alami, aman, verification, vario, utm, analysis, utama, update, aplikasi, apresisasikan, arifin, alat, cacat, brand, syarat, detail, diagram, dianalisa, tawar, dikatagorikan, dimensi, skor, display, distro, dokumen, skala, situs, sistematis, sistem, drawing, selenggara, sarana, sampelpenelitianiniadalahmahasiswaangkatan, saing, rumus, faktual, deskriptif, deskripsi, merchandise, desember, surya, status, conclusion, stratified, cranberries, cranberriess, credit, studi, dealler, cv, daerah, survei, dealer, versi, langsung, spss, ambil, terap, square, mudah, lihat, olah, random, tuntut, ukur, st, pengembnagan, satiyah, sdm, upaya, sikap, thitung, probality, program, mt, observasional, terampil, partisipasi, sumber, tingkah, suasana, simple, mm, a, menganalisa, irawati, instruktur, individu, hj, helm, harap, kuisioner, efisien, efektif, dukung, cipta, capai, buyung, dra, beda, analitik, anugrahini, aulia, kondusif, b, anova, autoritariansecara, abidin, syah, dharma, lai, fairesecara, sisa, koefisiensi, sertifikasi, alkirom, signifikansi, wildan, wispandono, primer, judgmental, beta, aththaariq, rm, muhammad, ms, moch, identifikasi, validitas, sedia, reliabilitas, proses, bidang, nyata, sebar, sesuai, ftabel, orang, accidental, laku, bimbing, aktif, ubah, m, badan, kuat, orgnisasional, tumbuh, setia, gerak, mentor, bisnis, sifat, nasional, negara, sponsor, sumbr, paktek, optimalisasi, praktek, kelola, kenal, listrik, jabat, butuh, motivasi, pns, negeri, tekan, sipil, usaha, dasar, non, kuesioner, salah, f, e, dr, tuju, analis, kuantitatif, arti, manusia, laksana, statistik, sampling, sosial, pribadi, kualitas, seleksi, instansi, data, kunci, koefisien, sampel, positif, simpul, faire, autoritarian, tabel, pegawaidikantor, trunojoyo, universitas, madura, fhitung, regresi, linier, teknik, tingkat, kantor, abstrak, determinasi, profesional, r, depot, dependen, empati, prambon, fisik, kehandalan, barokah, tanggap, responden, s, layan, cabang, populasi, hitung, didik, kontribusi, laissez, ganda, hubung, dominan, rupa, hasil, pedagogik, jamin, metode, ikat, daya, pangarengan, demokratis, camat, bebas, independen, analisis, laut, ikan, bangkal, simultan, karyawan, semangat, karir, hipotesis, latih, sampang, parsial, bukti, kabupaten, dinas, faktor, konsumen, milik, dosen, puas, pln, y, produktivitas, kompensasi, signifikan, tipe, nilai, teliti, prestasi, uji, kembang, pimpin, hadap, pegawai, kompetensi, pengaruh, kerja, variabel, x
+2 : a, pns, pln, pimpin, personal, persepsi, perilaku, performing, performance, percaya, perangkat, populasi, pengolaha, pegawaidikantor, pegawai, pedagogik, pd, pasar, partisipasi, parsial, pangsa, pangarengan, pamekasan, pengembnagan, paktek, portal, positivisme, reabilitas, ratio, random, r, putus, pustaka, purposive, puas, psikologis, proses, positif, promosi, profesional, produktivitas, probality, prioritas, primer, pribadi, prestasi, presepsi, prambon, praktek, program, reduction, pakai, orang, milik, merek, merchandise, mentor, menganalisa, masuk, mart, manusia, manfaat, maksimal, minat, mahasiswa, m, lunak, lukis, luas, x, loan, listrik, linier, likert, lihat, madura, orgnisasional, mix, moch, optimalisasi, optik, online, omzet, olah, observasional, observasi, nyata, npl, non, mm, nilai, negara, nasional, nasabah, mutu, muhammad, mudah, mt, ms, motor, motivasi, negeri, layan, regresi, reliabilitas, tipe, tinjau, tingkah, timur, thitung, terima, terap, terampil, ter, temu, transkrip, teknologi, teknik, tekan, tawar, tanggap, tabel, syarat, syah, surya, survei, sumbr, teknis, sumber, trunjoyo, tumbuh, wispandono, wildan, website, webqual, wawancara, volume, versi, verification, vario, validitas, trunojoyo, utm, update, upaya, universitas, unggul, ulang, ukur, uji, ubah, turun, tuntut, utama, rekomendasi, suasana, stratified, seleksi, sedia, sebar, sdm, satiyah, sampling, sampelpenelitianiniadalahmahasiswaangkatan, sampel, sampang, salah, selenggara, saing, rupa, rm, risk, riset, reza, retailing, retailimg, responden, resiko, research, s, studi, semangat, sesuai, status, statistik, st, square, spss, sponsor, sosial, skor, skala, situs, sertifikasi, sistematis, sisa, sipil, simultan, simpul, simple, sikap, signifikansi, signifikan, sifat, setia, sistem, laut, lokasi, faire, determinasi, detail, desember, depot, dependen, demokratis, dealler, dealer, daya, dasar, daerah, credit, cranberriess, cranberries, conclusion, cipta, capai, camat, cabang, buyung, butuh, dharma, diagram, dianalisa, didik, fenomenologi, faktual, faktor, fairesecara, latih, f, empati, efisien, efektif, e, bukti, dukung, dra, dr, dosen, dominan, dokumen, distro, display, dinas, dimensi, dikatagorikan, drawing, budaya, buah, bri, apresisasikan, aplikasi, anugrahini, anova, analysis, analitik, analisis, analis, ambil, aman, arifin, alkirom, alami, akurat, aktif, aksidental, akademik, agung, administrasi, adjusted, accidental, abidin, alat, fhitung, arti, asumsi, brand, bpr, bisnis, bimbing, bidang, beta, beli, beda, bebas, barokah, association, bantu, bank, bangkal, badan, b, autoritariansecara, autoritarian, aulia, atribut, atmosfer, aththaariq, banking, field, y, fisik, klasik, kip, kiddrock, ki, khs, kerja, kendala, kenal, kena, kembang, koefisien, kelola, kecuali, kategori, karyawan, kartesius, karir, kantor, filsafat, judgmental, jawa, jasa, kehandalan, jamin, koefisiensi, kompetensi, lapang, langgan, landas, lamongan, laku, laksana, laissez, lai, kwanyar, kumpul, kompensasi, kuisioner, kuat, kuantitatif, kuantitaif, kualitatif, krs, kota, kontribusi, konsumen, kondusif, komunikasi, kuesioner, jabat, kabupaten, idola, ikp, ikat, harap, ikan, ganda, identifikasi, hubung, honda, irawati, hj, hitung, harga, hipotesis, haryono, helm, guru, implementasi, fokus, gerai, internet, indeks, fitur, independen, instrumen, instruktur, individu, indonesia, informasi, gerak, ftabel, importance, inovasi, instansi, kunci, tuju, hasil, variabel, abstrak, metode, data, deskriptif, hadap, langsung, deskripsi, gambar, jual, minimal, periodik, fenomena, rumus, teliti, sarana, perinci, kapuas, cv, inti, usaha, pengaruh, tingkat, produk, risiko, kualitas, cacat, profitabilitas, lapor, biaya
+3 : a, pegawai, pedagogik, pd, pasar, partisipasi, pangsa, pangarengan, pamekasan, pegawaidikantor, paktek, orang, optimalisasi, optik, online, omzet, olah, observasional, observasi, orgnisasional, pengembnagan, pengolaha, perangkat, profesional, produktivitas, probality, prioritas, primer, prestasi, presepsi, prambon, praktek, portal, pns, pln, pimpin, personal, periodik, perinci, performing, performance, percaya, nyata, npl, non, negeri, loan, listrik, likert, lihat, laut, latih, lapor, lapang, langgan, lamongan, laksana, laissez, lai, kumpul, kuisioner, kuat, kuantitaif, kualitatif, kualitas, x, profitabilitas, luas, lunak, negara, nasional, mutu, muhammad, mt, ms, motivasi, moch, mm, minimal, milik, mentor, menganalisa, masuk, manusia, maksimal, mahasiswa, madura, m, lukis, program, proses, puas, tinjau, tingkat, tingkah, timur, thitung, terima, terap, terampil, ter, temu, teknologi, teknis, tekan, tawar, tanggap, tabel, syarat, syah, survei, tipe, sumbr, transkrip, trunojoyo, wispandono, wildan, website, webqual, wawancara, volume, verification, utm, utama, usaha, update, upaya, universitas, unggul, ukur, ubah, turun, tuntut, tumbuh, trunjoyo, krs, sumber, stratified, sampelpenelitianiniadalahmahasiswaangkatan, sampang, salah, saing, s, rumus, rm, risk, risiko, riset, reza, resiko, research, rekomendasi, reduction, reabilitas, ratio, random, pustaka, sarana, suasana, satiyah, seleksi, status, statistik, st, sponsor, skor, skala, situs, sistematis, sistem, sipil, simple, sikap, signifikansi, sifat, setia, sesuai, sertifikasi, semangat, selenggara, sdm, kontribusi, y, kondusif, dikatagorikan, didik, diagram, dharma, determinasi, detail, deskriptif, deskripsi, dimensi, desember, dependen, demokratis, daya, daerah, cv, credit, cranberriess, cranberries, depot, dinas, display, distro, fokus, fisik, field, fhitung, fenomenologi, fenomena, faktual, faktor, fairesecara, faire, empati, efisien, efektif, e, dukung, drawing, dra, dr, dosen, conclusion, ftabel, cipta, camat, aththaariq, association, apresisasikan, aplikasi, anugrahini, anova, analysis, analitik, atribut, alkirom, alami, akurat, aktif, aksidental, akademik, administrasi, accidental, abidin, alat, aulia, autoritarian, autoritariansecara, cacat, cabang, buyung, butuh, bukti, buah, brand, bpr, bisnis, bimbing, bidang, biaya, beta, beda, barokah, bantu, bank, badan, b, capai, gambar, dokumen, koefisien, jamin, jabat, irawati, kip, inti, ki, instruktur, instansi, inovasi, informasi, indonesia, individu, independen, indeks, importance, jasa, koefisiensi, jawa, judgmental, khs, kerja, kendala, kenal, kena, kembang, kelola, kehandalan, kategori, karyawan, kartesius, karir, kapuas, kantor, kabupaten, jual, implementasi, kiddrock, ikp, hitung, komunikasi, hubung, helm, hj, ikan, gerak, kompetensi, guru, harap, kompensasi, data, abstrak, nilai, rupa, simpul, r, arti, validitas, kuesioner, spss, produk, versi, analis, langsung, sebar, square, sisa, pakai, reliabilitas, hasil, studi, identifikasi, positif, adjusted, positivisme, klasik, retailimg, landas, filsafat, instrumen, asumsi, analisis, dealler, haryono, arifin, dianalisa, kunci, metode, sampling, kota, ganda, populasi, dominan, regresi, linier, f, ambil, sampel, tuju, teknik, parsial, dasar, purposive, sedia, kuantitatif, simultan, dealer, manfaat, aman, bebas, ikat, signifikan, responden, sosial, pribadi, nasabah, fitur, kecuali, laku, hipotesis, mart, idola, retailing, kwanyar, bangkal, motor, budaya, surya, agung, lokasi, gerai, merchandise, promosi, mix, atmosfer, perilaku, psikologis, mudah, merek, hadap, harga, minat, bri, ulang, layan, vario, honda, uji, banking, internet, teliti, persepsi, pengaruh, konsumen, putus, beli, variabel
+4 : a, optimalisasi, optik, omzet, observasional, observasi, npl, nilai, orgnisasional, negeri, nasional, nasabah, muhammad, mudah, mt, ms, motor, negara, paktek, pangarengan, pangsa, positif, pns, pln, pimpin, periodik, perinci, perilaku, performing, pengembnagan, pengaruh, pegawaidikantor, pegawai, pedagogik, pd, pasar, partisipasi, parsial, motivasi, moch, mm, mix, laku, laksana, laissez, lai, kwanyar, kuisioner, kuat, kuantitatif, kualitatif, kota, kontribusi, kondusif, kompetensi, kompensasi, koefisiensi, koefisien, klasik, lamongan, positivisme, landas, lapor, minimal, minat, milik, merchandise, mentor, menganalisa, mart, manusia, maksimal, m, x, loan, listrik, linier, lihat, laut, latih, langsung, praktek, prambon, prestasi, terampil, tekan, tawar, tanggap, tabel, syarat, syah, surya, sumbr, sumber, suasana, statistik, st, square, sponsor, sisa, sipil, terap, simultan, thitung, tingkah, wispandono, wildan, wawancara, volume, verification, vario, variabel, usaha, upaya, unggul, ulang, ukur, ubah, turun, tuntut, tumbuh, tipe, timur, kenal, simpul, sikap, resiko, reliabilitas, regresi, reduction, ratio, r, putus, purposive, psikologis, promosi, program, profitabilitas, profesional, produktivitas, produk, probality, primer, retailimg, simple, retailing, risiko, signifikansi, signifikan, sifat, setia, sertifikasi, semangat, seleksi, sebar, sdm, satiyah, sarana, sampang, saing, s, rumus, rm, risk, reza, kembang, lokasi, y, empati, efisien, efektif, e, dukung, drawing, f, dra, bangkal, dosen, dominan, dokumen, bank, display, dr, faire, fairesecara, badan, aththaariq, ganda, ftabel, atmosfer, fitur, fisik, filsafat, aulia, fhitung, autoritarian, fenomenologi, fenomena, autoritariansecara, b, faktor, dinas, gerai, banking, dikatagorikan, cv, bpr, credit, bri, buah, budaya, daerah, conclusion, capai, camat, cacat, cabang, buyung, butuh, cipta, bisnis, bimbing, daya, didik, dianalisa, bebas, beda, dharma, determinasi, kelola, beli, beta, biaya, depot, dependen, demokratis, dealler, dealer, barokah, gerak, bukti, agung, anova, analitik, jual, karyawan, karir, independen, kapuas, jabat, kantor, kabupaten, anugrahini, individu, indonesia, irawati, judgmental, inti, inovasi, aktif, instansi, asumsi, alkirom, instruktur, analis, instrumen, internet, ikat, kehandalan, abidin, helm, hipotesis, alami, hitung, jawa, hj, kecuali, haryono, arti, honda, hubung, abstrak, accidental, idola, ikan, harap, adjusted, arifin, harga, kerja, rupa, tingkat, responden, populasi, non, kunci, kualitas, salah, deskripsi, konsumen, kuesioner, ambil, hadap, nyata, manfaat, sesuai, bidang, random, proses, aman, gambar, hasil, tuju, versi, sosial, spss, pribadi, validitas, atribut, teknologi, stratified, temu, sampelpenelitianiniadalahmahasiswaangkatan, ter, alat, analysis, transkrip, akurat, utama, selenggara, skor, update, sistematis, sistem, aplikasi, trunjoyo, kena, prioritas, faktual, online, percaya, fokus, guru, masuk, ikp, personal, lukis, implementasi, detail, diagram, komunikasi, kendala, jasa, kuantitaif, khs, krs, kip, kategori, kartesius, olah, orang, luas, studi, kumpul, sampling, terima, aksidental, lunak, survei, field, likert, lapang, riset, apresisasikan, status, desember, pustaka, presepsi, reabilitas, rekomendasi, bantu, research, cranberriess, perangkat, pengolaha, pamekasan, skala, dasar, uji, deskriptif, teknik, sampel, trunojoyo, sedia, identifikasi, analisis, utm, website, tinjau, teknis, situs, mutu, ki, jamin, merek, layan, metode, madura, universitas, mahasiswa, webqual, administrasi, importance, performance, informasi, pakai, persepsi, teliti, data, indeks, brand, kiddrock, distro, cranberries, association, portal, puas, langgan, akademik, dimensi
+</pre></div>
+</div>
+</div>
+</div>
+<h3> 10 Clusters</h3>
+<p>Sama seperti saat 5 cluster, akan tetapi disini membagi menjadi 10 cluster</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">n_init</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">common_words</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">#print(common_words)</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">common_words</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; : &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word_features</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">centroid</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 : resiko, npl, bank, turun, risk, ratio, pd, bpr, credit, tingkat
+1 : variabel, x, pimpin, tipe, pegawai, kompensasi, pengaruh, puas, hadap, konsumen
+2 : akademik, puas, portal, langgan, indeks, informasi, webqual, performance, administrasi, importance
+3 : beli, putus, konsumen, variabel, uji, vario, honda, pengaruh, harga, merek
+4 : biaya, lapor, profitabilitas, cacat, kualitas, risiko, produk, tingkat, pengaruh, usaha
+5 : inovasi, saing, unggul, pasar, reza, optik, lamongan, data, jawa, tingkat
+6 : dimensi, distro, brand, cranberries, kiddrock, association, persepsi, pakai, langgan, data
+7 : persepsi, internet, banking, minat, ulang, bri, mudah, variabel, layan, kecuali
+8 : kompetensi, dosen, x, pedagogik, profesional, kerja, variabel, pengaruh, universitas, madura
+9 : kembang, kerja, produktivitas, pln, faktor, latih, karyawan, semangat, karir, x
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="Program_Crawling.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Program Crawling</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="LSA.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Nomer 2 : Topic Modeling dengan LSA</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Teguh Arya Al'Azha 19-059<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
